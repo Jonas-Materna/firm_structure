@@ -1,0 +1,17 @@
+# Local and project stuff
+.DS_Store
+firm_structure.env
+firm_structure.log
+public/
+tail.pid
+
+# Python stuff
+__pycache__/
+.venv
+
+# R Stuff
+.Rproj.user
+*.Rproj
+.Rhistory
+.quarto
+/.vscode
