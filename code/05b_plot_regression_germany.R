@@ -7,6 +7,7 @@ library(DBI)
 library(ggplot2)
 library(ggpubr)
 library(patchwork)
+library(scales)
 library(modelsummary)
 library(extrafont)
 loadfonts(device = "win")
@@ -163,21 +164,21 @@ dt$above_toas_thresh <- dt$sum_total_assets > 6000000
 dt$above_emp_thresh <- dt$sum_employees > 50
 dt$above_both <- dt$above_toas_thresh & dt$above_emp_thresh
 
+dt$sum_total_assets_scaled <- dt$sum_total_assets /1000000
+
 m1 <- list(
   fixest::feols(
-    fml = multiple ~ sum_total_assets, data = dt),
+    fml = multiple ~ sum_total_assets_scaled, data = dt),
   fixest::feols(
     fml = multiple ~ sum_employees, data = dt),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees, data = dt),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees, data = dt),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_toas_thresh, data = dt),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_toas_thresh, data = dt),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_emp_thresh, data = dt),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_emp_thresh, data = dt),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_toas_thresh + above_emp_thresh, data = dt),
-  fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_both, data = dt)
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_both, data = dt)
 )
 
 modelsummary(
@@ -220,19 +221,17 @@ sum(within_fe_variation$both_tresh)
 
 m2 <- list(
   fixest::feols(
-    fml = multiple ~ sum_total_assets | owner, data = dt_2),
+    fml = multiple ~ sum_total_assets_scaled | owner, data = dt_2),
   fixest::feols(
     fml = multiple ~ sum_employees| owner, data = dt_2),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees| owner, data = dt_2),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees| owner, data = dt_2),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_toas_thresh| owner, data = dt_2),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_toas_thresh| owner, data = dt_2),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_emp_thresh| owner, data = dt_2),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_emp_thresh| owner, data = dt_2),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_toas_thresh + above_emp_thresh| owner, data = dt_2),
-  fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_both| owner, data = dt_2)
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_both| owner, data = dt_2)
 )
 
 modelsummary(
@@ -243,5 +242,16 @@ modelsummary(
 
 
 
+
+##################
+# Back of the envelope calculation
+##################
+dt <- dt_owner %>% filter(year %in% 2021)
+
+above_thresh <- dt %>% filter(sum_employees > 50 & sum_total_assets > 6000000)
+avoider_est  <- above_thresh %>% filter(max_employees < 50  | max_assets < 6000000)
+
+n_entities <- sum(avoider_est$n_entities)
+sum_assets <- sum(avoider_est$sum_total_assets)
 
 

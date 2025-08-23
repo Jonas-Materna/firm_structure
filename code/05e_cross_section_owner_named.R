@@ -151,13 +151,15 @@ smp_owner$above_toas_thresh <- smp_owner$sum_total_assets > 6000000
 smp_owner$above_emp_thresh <- smp_owner$sum_employees > 50
 smp_owner$above_both <- smp_owner$above_toas_thresh & smp_owner$above_emp_thresh
 
+smp_owner$sum_total_assets_scaled <- smp_owner$sum_total_assets/1000000
+
 m1 <- list(
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + owner_named + above_toas_thresh + above_toas_thresh * owner_named, data = smp_owner),
+    fml = multiple ~ sum_total_assets_scaled  + sum_employees + owner_named + above_toas_thresh + above_toas_thresh * owner_named, data = smp_owner),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + owner_named + above_emp_thresh +  above_emp_thresh * owner_named, data = smp_owner),
+    fml = multiple ~ sum_total_assets_scaled  + sum_employees + owner_named + above_emp_thresh +  above_emp_thresh * owner_named, data = smp_owner),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + owner_named + above_both + above_both * owner_named, data = smp_owner)
+    fml = multiple ~ sum_total_assets_scaled  + sum_employees + owner_named + above_both + above_both * owner_named, data = smp_owner)
 )
 
 

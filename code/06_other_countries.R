@@ -421,20 +421,22 @@ dt_lv$above_toas_thresh <- dt_lv$sum_total_assets > 800000
 dt_lv$above_emp_thresh <- dt_lv$sum_employees > 50
 dt_lv$above_both <- dt_lv$above_toas_thresh & dt_lv$above_emp_thresh
 
+dt_at$sum_total_assets_scaled <- dt_at$sum_total_assets/1000000
+dt_lv$sum_total_assets_scaled <- dt_lv$sum_total_assets/1000000
 
 m1 <- list(
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_toas_thresh, data = dt_at),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_toas_thresh, data = dt_at),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_emp_thresh, data = dt_at),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_emp_thresh, data = dt_at),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_both, data = dt_at), 
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_both, data = dt_at), 
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_toas_thresh, data = dt_lv),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_toas_thresh, data = dt_lv),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_emp_thresh, data = dt_lv),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_emp_thresh, data = dt_lv),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + above_both, data = dt_lv)
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + above_both, data = dt_lv)
 )
 
 modelsummary(

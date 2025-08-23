@@ -49,7 +49,7 @@ rm(dt_owner, lower_limit_employees, upper_limit_employees,  lower_limit_total_as
 
 
 ##################
-# Comparison on industries (is this particularly commin among real estate firms?)
+# Comparison on industries (is this particularly common among real estate firms?)
 ##################
 
 
@@ -116,13 +116,16 @@ smp_owner$above_toas_thresh <- smp_owner$sum_total_assets > 6000000
 smp_owner$above_emp_thresh <- smp_owner$sum_employees > 50
 smp_owner$above_both <- smp_owner$above_toas_thresh & smp_owner$above_emp_thresh
 
+
+smp_owner$sum_total_assets_scaled <- smp_owner$sum_total_assets/1000000
+
 m1 <- list(
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + real_estate_industry + above_toas_thresh + above_toas_thresh * real_estate_industry, data = smp_owner),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + real_estate_industry + above_toas_thresh + above_toas_thresh * real_estate_industry, data = smp_owner),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + real_estate_industry + above_emp_thresh +  above_emp_thresh * real_estate_industry, data = smp_owner),
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + real_estate_industry + above_emp_thresh +  above_emp_thresh * real_estate_industry, data = smp_owner),
   fixest::feols(
-    fml = multiple ~ sum_total_assets + sum_employees + real_estate_industry + above_both + above_both * real_estate_industry, data = smp_owner)
+    fml = multiple ~ sum_total_assets_scaled + sum_employees + real_estate_industry + above_both + above_both * real_estate_industry, data = smp_owner)
 )
 
 
