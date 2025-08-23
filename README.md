@@ -1,6 +1,6 @@
 # firm_structure: Strategic Fragmentation Around Regulatory Thresholds
 
-This repository contains the replication package for the paper *Strategic Fragmentation Around Regulatory Thresholds*. This study investigates whether threshold-based regulation leads to more fragmented firm structures.
+This repository contains the replication package for the paper *Strategic Fragmentation Around Regulatory Thresholds*. The study investigates whether threshold-based regulation leads to more fragmented firm structures.
 
 ---
 
